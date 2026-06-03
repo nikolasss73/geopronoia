@@ -1,19 +1,63 @@
 import streamlit as st
 from PIL import Image
-import base64
 
-# Ρυθμίσεις Παγκόσμιας Αυθεντίας - Version 6.0
-st.set_page_config(page_title="ΓΕΩΠΡΟΝΟΙΑ GOLD", page_icon="🌳", layout="wide")
+# ΓΕΩΠΡΟΝΟΙΑ GOLD v6.1 - ΣΤΑΘΕΡΗ ΕΚΔΟΣΗ
+st.set_page_config(page_title="ΓΕΩΠΡΟΝΟΙΑ", layout="wide")
 
-st.markdown("""
-<style>
-    .report-title { color: #1b5e20; font-size: 32px; font-weight: bold; text-align: center; border-bottom: 4px solid #1b5e20; padding-bottom: 10px; }
-    .section-header { background-color: #1b5e20; color: white; padding: 12px; border-radius: 8px; margin-top: 25px; font-size: 22px; font-weight: bold; }
-    .advice-box { background-color: #f1f8e9; border-left: 10px solid #2e7d32; padding: 25px; margin: 15px 0; border-radius: 12px; font-size: 19px; line-height: 1.6; color: #1b5e20; }
-    .critical-box { background-color: #ffebee; border-left: 10px solid #d32f2f; padding: 25px; margin: 15px 0; border-radius: 12px; font-size: 19px; line-height: 1.6; color: #b71c1c; }
-    .stButton>button { background-color: #1b5e20; color: white; font-weight: bold; height: 4.5em; width: 100%; border-radius: 15px; font-size: 24px; box-shadow: 0 6px 12px rgba(0,0,0,0.2); }
-    .unit-card { background-color: #e8f5e9; border: 1px solid #1b5e20; padding: 15px; border-radius: 10px; text-align: center; }
-</style>
-""", unsafe_allow_html=True)
+st.title("🌿 ΓΕΩΠΡΟΝΟΙΑ: Παγκόσμια Αυθεντία Θρέψης")
+st.write("---")
 
-st.title("🌿 ΓΕΩΠΡΟΝΟΙΑ: Παγκόσμιο Σύστημα Στ
+# ΠΛΕΥΡΙΚΗ ΣΤΗΛΗ
+st.sidebar.header("📍 Ρυθμίσεις")
+crop = st.sidebar.selectbox("Καλλιέργεια:", ["Ελιά", "Αμπέλι", "Πατάτα", "Φράουλα"])
+age = st.sidebar.selectbox("Ηλικία:", ["1-7 ετών", "8-40 ετών", "40+ ετών"])
+stage = st.sidebar.selectbox("Στάδιο:", ["Μούρο", "Άνθηση", "Καρπόδεση", "Ωρίμανση"])
+method = st.sidebar.radio("Σύστημα:", ["Ξερικό", "Ποτιστικό"])
+yield_prev = st.sidebar.radio("Πέρυσι παραγωγή:", ["Υπερβολική", "Κανονική", "Μειωμένη"])
+
+# ΑΝΕΒΑΣΜΑ ΑΡΧΕΙΩΝ
+st.header("📂 1. Ανέβασμα Αρχείων")
+files = st.file_uploader("Ανεβάστε Φωτογραφίες ή PDF", accept_multiple_files=True)
+if files:
+    st.success(f"Φορτώθηκαν {len(files)} αρχεία.")
+
+# ΕΙΣΑΓΩΓΗ ΤΙΜΩΝ
+st.header("🔬 2. Τιμές Εργαστηρίου")
+c1, c2, c3 = st.columns(3)
+ph = c1.number_input("pH Εδάφους", value=6.17)
+om = c1.number_input("Οργανική Ουσία (%)", value=0.90)
+k_val = c2.number_input("Κάλιο (ppm)", value=150.0)
+mg_val = c2.number_input("Μαγνήσιο (ppm)", value=200.0)
+boron = c3.number_input("Βόριο (ppm)", value=0.24)
+calcium = c3.number_input("Ασβέστιο (meq)", value=6.0)
+
+if st.button("🚀 ΕΚΔΟΣΗ ΕΠΙΣΤΗΜΟΝΙΚΗΣ ΕΚΘΕΣΗΣ"):
+    st.header("📋 ΠΟΡΙΣΜΑ ΓΕΩΠΡΟΝΟΙΑ")
+    
+    # ΜΗΧΑΝΗ 1: ΧΗΜΕΙΑ (ALBRECHT)
+    st.subheader("1. Χημεία Εδάφους")
+    if om < 1.5:
+        st.error(f"🔴 ΚΡΙΣΙΜΟ: Χαμηλή Οργανική Ουσία ({om}%). Χρειάζεστε κοπριά ή χουμικά.")
+    
+    k_mg_ratio = k_val / (mg_val + 0.1)
+    if k_mg_ratio < 0.5:
+        st.warning(f"⚠️ ΑΝΤΑΓΩΝΙΣΜΟΣ: Το Μαγνήσιο μπλοκάρει το Κάλιο. Ρίξτε Κάλιο μόνο διαφυλλικά.")
+    
+    if ph > 7.5:
+        st.error(f"🚫 pH {ph}: Ο Φώσφορος είναι κλειδωμένος. Χρησιμοποιήστε χηλικές μορφές.")
+
+    # ΜΗΧΑΝΗ 2 & 4: ΦΥΣΙΟΛΟΓΙΑ & ΠΑΡΕΝΙΑΥΤΟΦΟΡΙΑ
+    st.subheader("2. Φυσιολογία & Ιστορικότητα")
+    st.write(f"• Ηλικιακό μοντέλο: {age}")
+    if yield_prev == "Υπερβολική":
+        st.warning("📉 ΠΑΡΕΝΙΑΥΤΟΦΟΡΙΑ: Το δέντρο είναι εξαντλημένο. Χρειάζεται άμεσα Αμινοξέα.")
+
+    # ΜΗΧΑΝΗ 3: ΥΔΡΟΛΟΓΙΑ
+    st.subheader("3. Διαχείριση Νερού")
+    if method == "Ξερικό":
+        st.info("🚫 ΞΕΡΙΚΗ ΔΙΑΧΕΙΡΙΣΗ: Η ρίζα δεν τραβάει λίπασμα χωρίς βροχή. Μόνο ψεκασμοί στα φύλλα.")
+    else:
+        st.success("💧 ΠΟΤΙΣΤΙΚΟ: Ιδανικό για υδρολίπανση.")
+
+    # ΜΗΧΑΝΗ 5: ΣΤΡΑΤΗΓΙΚΗ
+    st.subheader("4. Πρόγραμμα Μονάδων ανά Στρέμμα")
